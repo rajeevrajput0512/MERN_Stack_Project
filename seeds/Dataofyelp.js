@@ -5,7 +5,7 @@ const { descriptors, places } = require("./seedHelpers");
 
 mongoose
   .connect("mongodb://localhost:27017/Yelpcamp", {
-    useFindAndModify: true,
+    useFindAndModify: false,
     useUnifiedTopology: true,
     useNewUrlParser: true,
   })

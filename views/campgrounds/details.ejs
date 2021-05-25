@@ -1,18 +1,9 @@
-<html lang="en">
-  <head>
-    <meta charset="UTF-8" />
-    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>Campground</title>
-  </head>
-  <body>
-    <h1><%= data.title %></h1>
-    <h3>location: <%= data.description %></h3>
+<% layout('campgrounds/boilerplate') %>
+<h1><%= data.title %></h1>
+<h3>location: <%= data.description %></h3>
 
-    <a href="/campgrounds"> All campgrounds</a>
-    <a href="/campgrounds/<%= data._id %>/edit"> Edit fields</a>
-    <form action="/campgrounds/<%= data._id %>?_method=DELETE" method="post">
-      <button type="submit">DELETE</button>
-    </form>
-  </body>
-</html>
+<a href="/campgrounds"> All campgrounds</a>
+<a href="/campgrounds/<%= data._id %>/edit"> Edit fields</a>
+<form action="/campgrounds/<%= data._id %>?_method=DELETE" method="post">
+  <button type="submit">DELETE</button>
+</form>

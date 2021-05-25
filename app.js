@@ -1,12 +1,13 @@
 const express = require("express");
 const app = express();
 const path = require("path");
+const ejsmate = require("ejs-mate");
 const mongoose = require("mongoose");
 const methodOveride = require("method-override");
 const Campground = require("./Schema");
 mongoose
   .connect("mongodb://localhost:27017/Yelpcamp", {
-    useFindAndModify: true,
+    useFindAndModify: false,
     useUnifiedTopology: true,
     useNewUrlParser: true,
   })
@@ -18,6 +19,7 @@ mongoose
   });
 
 //Middle Ware
+app.engine("ejs", ejsmate);
 app.use(methodOveride("_method"));
 app.use(express.static(path.join(__dirname, "./pubic")));
 app.use(express.json());
