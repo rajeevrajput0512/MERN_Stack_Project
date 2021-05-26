@@ -2,7 +2,12 @@
 <div class="row">
   <div class="col-6 offset-3">
     <h1 class="text-center">New Campground</h1>
-    <form action="/campgrounds" method="post">
+    <form
+      action="/campgrounds"
+      method="post"
+      novalidate
+      class="needs-validation"
+    >
       <div class="mb-3">
         <label class="form-label" for="title"> Title :</label>
         <input
@@ -11,17 +16,21 @@
           id="title"
           name="title"
           placeholder="Title"
+          required
         />
+        <div class="valid-feedback">Looks Good!!</div>
       </div>
       <div class="mb-3">
         <label class="form-label" for="price"> price: </label>
         <input
           class="form-control"
-          type="number"
+          type="text"
           name="price"
           id="price"
           placeholder="price"
+          required
         />
+        <div class="valid-feedback">Looks Good!!</div>
       </div>
       <div class="mb-3">
         <label class="form-label" for="image"> Image URL:</label>
@@ -31,7 +40,10 @@
           name="image"
           id="image"
           placeholder="Image URL"
+          required
         />
+        <div class="valid-feedback">Looks Good!!</div>
+        <div class="invalid-feedback">Image is also important!!</div>
       </div>
 
       <div class="mb-3">
@@ -42,7 +54,9 @@
           name="description"
           id="desc"
           placeholder="Description"
+          required
         ></textarea>
+        <div class="valid-feedback">Looks Good!!</div>
       </div>
       <div class="mb-3">
         <label class="form-label" for="location"> location:</label>
@@ -52,7 +66,9 @@
           name="location"
           id="location"
           placeholder="Location"
+          required
         />
+        <div class="valid-feedback">Looks Good!!</div>
       </div>
       <button class="btn btn-primary" class="mb-3" type="submit">
         click me

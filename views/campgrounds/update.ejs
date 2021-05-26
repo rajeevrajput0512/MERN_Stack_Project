@@ -1,8 +1,13 @@
 <% layout('campgrounds/boilerplate') %>
 <h1 class="text-center">Update Data</h1>
 <div class="row">
-  <div class="col-md-6 offset-3">
-    <form action="/campgrounds/<%= data._id %>?_method=PUT" method="post">
+  <div class="col-6 offset-3">
+    <form
+      action="/campgrounds/<%= data._id %>?_method=PUT"
+      method="post"
+      novalidate
+      class="needs-validation"
+    >
       <div class="mb-3">
         <label class="form-label" for="title"> Title :</label>
         <input
@@ -12,7 +17,9 @@
           name="title"
           placeholder="Title"
           value="<%=data.title%>"
+          required
         />
+        <div class="valid-feedback">Looks Good!!</div>
       </div>
       <div class="mb-3">
         <label class="form-label" for="price"> price: </label>
@@ -23,7 +30,9 @@
           id="price"
           placeholder="price"
           value="<%=data.price%>"
+          required
         />
+        <div class="valid-feedback">Looks Good!!</div>
       </div>
       <div class="mb-3">
         <label class="form-label" for="image"> Image URL:</label>
@@ -34,7 +43,9 @@
           id="image"
           placeholder="Image URL"
           value="<%=data.image%>"
+          required
         />
+        <div class="valid-feedback">Looks Good!!</div>
       </div>
 
       <div class="mb-3">
@@ -45,9 +56,11 @@
           name="description"
           id="desc"
           placeholder="Description"
+          required
         >
     <%=data.description%></textarea
         >
+        <div class="valid-feedback">Looks Good!!</div>
       </div>
       <div class="mb-3">
         <label class="form-label" for="location"> location:</label>
@@ -58,7 +71,9 @@
           id="location"
           placeholder="Location"
           value="<%=data.location%> "
+          required
         />
+        <div class="valid-feedback">Looks Good!!</div>
       </div>
       <button class="btn btn-info" class="mb-3" type="submit">
         Update Fields

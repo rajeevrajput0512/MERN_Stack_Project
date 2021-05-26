@@ -5,6 +5,9 @@ const ejsmate = require("ejs-mate");
 const mongoose = require("mongoose");
 const methodOveride = require("method-override");
 const Campground = require("./Schema");
+const catchAsync = require("./utils/catchAsync");
+const customError = require("./utils/customError");
+const Joi = require("joi");
 mongoose
   .connect("mongodb://localhost:27017/Yelpcamp", {
     useFindAndModify: false,
@@ -21,7 +24,7 @@ mongoose
 //Middle Ware
 app.engine("ejs", ejsmate);
 app.use(methodOveride("_method"));
-app.use(express.static(path.join(__dirname, "./pubic")));
+app.use(express.static(path.join(__dirname, "./public")));
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
 //SETUP EJS MATE
@@ -31,52 +34,103 @@ app.set("views", path.join(__dirname, "./views"));
 
 const port = process.env.PORT || 3000;
 
-app.get("/campgrounds", async (req, res, next) => {
-  const data = await Campground.find({});
-  res.render("campgrounds/home", { data });
-});
-
-app.get("/campgrounds/new", async (req, res) => {
-  res.render("campgrounds/formtoadd");
-});
-
-app.post("/campgrounds", async (req, res) => {
-  const { title, price, description, location, image } = req.body;
-  const nnn = new Campground({
-    title: title,
-    price: price,
-    description: description,
-    location: location,
-    image: image,
+const ValidcampSchema = (req, res, next) => {
+  const Camopschema = Joi.object({
+    title: Joi.string().required(),
+    price: Joi.number().required().min(200),
+    description: Joi.string().required(),
+    location: Joi.string().required(),
+    image: Joi.string().required(),
   });
-  await nnn.save();
-  res.redirect(`/campgrounds/${nnn._id}`);
-});
+  const { error } = Camopschema.validate(req.body);
+  if (error) {
+    const CompleteMessage = error.details.map((el) => el.message).join(",");
+    throw new customError(CompleteMessage, 404);
+  } else {
+    next();
+  }
+};
 
-app.delete("/campgrounds/:id", async (req, res) => {
-  const { id } = req.params;
-  await Campground.findByIdAndDelete(id);
-  res.redirect("/campgrounds");
-});
+app.get(
+  "/campgrounds",
+  catchAsync(async (req, res, next) => {
+    const data = await Campground.find({});
+    res.render("campgrounds/home", { data });
+  })
+);
 
-app.get("/campgrounds/:id/edit", async (req, res) => {
-  const { id } = req.params;
-  const data = await Campground.findById(id);
-  res.render("campgrounds/update", { data });
-});
+app.get(
+  "/campgrounds/new",
+  catchAsync(async (req, res) => {
+    res.render("campgrounds/formtoadd");
+  })
+);
 
-app.put("/campgrounds/:id", async (req, res) => {
-  const { id } = req.params;
-  const nnn = await Campground.findByIdAndUpdate(id, req.body, {
-    new: true,
-    runValidators: true,
-  });
-  res.redirect(`/campgrounds/${nnn._id}`);
+app.post(
+  "/campgrounds",
+  ValidcampSchema,
+  catchAsync(async (req, res, next) => {
+    const { title, price, description, location, image } = req.body;
+    const nnn = new Campground({
+      title: title,
+      price: price,
+      description: description,
+      location: location,
+      image: image,
+    });
+    await nnn.save();
+    res.redirect(`/campgrounds/${nnn._id}`);
+  })
+);
+
+app.delete(
+  "/campgrounds/:id",
+  catchAsync(async (req, res) => {
+    const { id } = req.params;
+    await Campground.findByIdAndDelete(id);
+    res.redirect("/campgrounds");
+  })
+);
+
+app.get(
+  "/campgrounds/:id/edit",
+  catchAsync(async (req, res) => {
+    const { id } = req.params;
+    const data = await Campground.findById(id);
+    res.render("campgrounds/update", { data });
+  })
+);
+
+app.put(
+  "/campgrounds/:id",
+  ValidcampSchema,
+  catchAsync(async (req, res) => {
+    const { id } = req.params;
+    const nnn = await Campground.findByIdAndUpdate(id, req.body, {
+      new: true,
+      runValidators: true,
+    });
+    res.redirect(`/campgrounds/${nnn._id}`);
+  })
+);
+app.get(
+  "/campgrounds/:id",
+  catchAsync(async (req, res, next) => {
+    const { id } = req.params;
+    const data = await Campground.findById(id);
+    res.render("campgrounds/details", { data });
+  })
+);
+
+app.all("*", (req, res, next) => {
+  next(new customError("This is not working", 404));
 });
-app.get("/campgrounds/:id", async (req, res, next) => {
-  const { id } = req.params;
-  const data = await Campground.findById(id);
-  res.render("campgrounds/details", { data });
+app.use((err, req, res, next) => {
+  const { status = 500 } = err;
+  if (!err.message) {
+    err.message = " Something is wrong  I cant find out";
+  }
+  res.status(status).render("error", { ...err });
 });
 
 app.listen(port, () => {
