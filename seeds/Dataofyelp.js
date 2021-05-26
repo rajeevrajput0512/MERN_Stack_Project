@@ -22,7 +22,7 @@ let rann = (arr) => {
   return (no = Math.floor(Math.random() * arr.length));
 };
 function generate() {
-  for (let i = 0; i < 50; i++) {
+  for (let i = 0; i < 10; i++) {
     const price = Math.floor(Math.random() * 1000) + 500;
     const title = `${random1000[i].city} , ${random1000[i].state}`;
     const description = descriptors[rann(descriptors)];
@@ -33,7 +33,7 @@ function generate() {
       description:
         "Lorem ipsum dolor sit amet consectetur adipisicing elit. Quaerat quod commodi in fugit iusto, animi beatae porro excepturi, asperiores ipsam molestias dolores exercitationem nisi praesentium quos voluptatum, quo autem vero. Lorem ipsum dolor sit amet consectetur adipisicing elit. Repellendus debitis, maxime enim maiores sunt repellat quia eveniet earum dignissimos mollitia quas vel veritatis temporibus reprehenderit distinctio reiciendis unde. Officiis, sint!",
       location: `${description} ${location}`,
-      image: "https://source.unsplash.com/collection/9046579",
+      image: "https://source.unsplash.com/collection/9046579/600x400",
     };
   }
 }

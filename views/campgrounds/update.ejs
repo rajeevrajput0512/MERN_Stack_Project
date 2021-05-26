@@ -1,37 +1,69 @@
 <% layout('campgrounds/boilerplate') %>
-<form action="/campgrounds/<%= data._id %>?_method=PUT" method="post">
-  <label for="title"> Title :</label>
-  <input
-    type="text"
-    id="title"
-    name="title"
-    placeholder="Title"
-    value="<%= data.title %> "
-  />
-  <label for="price"> price: </label>
-  <input
-    type="number"
-    name="price"
-    id="price"
-    value="<%= data.price%>"
-    placeholder="price"
-  />
-  <label for="desc"> Description</label>
-  <input
-    type="text"
-    name="description"
-    id="desc"
-    placeholder="Description"
-    value="<%= data.description %> "
-  />
-  <label for="location"> location:</label>
-  <input
-    type="text"
-    name="location"
-    id="location"
-    placeholder="Location"
-    value="<%= data.location %> "
-  />
-  <button type="submit">click me</button>
-</form>
-<a href="/campgrounds"> All campgrounds</a>
+<h1 class="text-center">Update Data</h1>
+<div class="row">
+  <div class="col-md-6 offset-3">
+    <form action="/campgrounds/<%= data._id %>?_method=PUT" method="post">
+      <div class="mb-3">
+        <label class="form-label" for="title"> Title :</label>
+        <input
+          class="form-control"
+          type="text"
+          id="title"
+          name="title"
+          placeholder="Title"
+          value="<%=data.title%>"
+        />
+      </div>
+      <div class="mb-3">
+        <label class="form-label" for="price"> price: </label>
+        <input
+          class="form-control"
+          type="number"
+          name="price"
+          id="price"
+          placeholder="price"
+          value="<%=data.price%>"
+        />
+      </div>
+      <div class="mb-3">
+        <label class="form-label" for="image"> Image URL:</label>
+        <input
+          class="form-control"
+          type="text"
+          name="image"
+          id="image"
+          placeholder="Image URL"
+          value="<%=data.image%>"
+        />
+      </div>
+
+      <div class="mb-3">
+        <label class="form-label" for="desc"> Description</label>
+        <textarea
+          class="form-control"
+          type="text"
+          name="description"
+          id="desc"
+          placeholder="Description"
+        >
+    <%=data.description%></textarea
+        >
+      </div>
+      <div class="mb-3">
+        <label class="form-label" for="location"> location:</label>
+        <input
+          class="form-control"
+          type="text"
+          name="location"
+          id="location"
+          placeholder="Location"
+          value="<%=data.location%> "
+        />
+      </div>
+      <button class="btn btn-info" class="mb-3" type="submit">
+        Update Fields
+      </button>
+    </form>
+    <a href="/campgrounds"> All campgrounds</a>
+  </div>
+</div>
