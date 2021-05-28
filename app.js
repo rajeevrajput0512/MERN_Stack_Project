@@ -4,7 +4,7 @@ const path = require("path");
 const ejsmate = require("ejs-mate");
 const mongoose = require("mongoose");
 const methodOveride = require("method-override");
-const Campground = require("./Schema");
+const Campground = require("./Schema/campground");
 const catchAsync = require("./utils/catchAsync");
 const customError = require("./utils/customError");
 const Joi = require("joi");
@@ -32,16 +32,8 @@ app.use(express.urlencoded({ extended: true }));
 app.set("view engine", "ejs");
 app.set("views", path.join(__dirname, "./views"));
 
-const port = process.env.PORT || 3000;
-
 const ValidcampSchema = (req, res, next) => {
-  const Camopschema = Joi.object({
-    title: Joi.string().required(),
-    price: Joi.number().required().min(200),
-    description: Joi.string().required(),
-    location: Joi.string().required(),
-    image: Joi.string().required(),
-  });
+  const { Camopschema } = require("./Schema/Joicamp");
   const { error } = Camopschema.validate(req.body);
   if (error) {
     const CompleteMessage = error.details.map((el) => el.message).join(",");
@@ -123,7 +115,7 @@ app.get(
 );
 
 app.all("*", (req, res, next) => {
-  next(new customError("This is not working", 404));
+  next(new customError("Page Cannot be found", 404));
 });
 app.use((err, req, res, next) => {
   const { status = 500 } = err;
@@ -133,6 +125,8 @@ app.use((err, req, res, next) => {
   res.status(status).render("error", { ...err });
 });
 
+// Listener
+const port = process.env.PORT || 3000;
 app.listen(port, () => {
   console.log(" hey yes buddy ");
 });

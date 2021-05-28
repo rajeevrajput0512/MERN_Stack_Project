@@ -1,5 +1,5 @@
 const mongoose = require("mongoose");
-const Campground = require("../Schema");
+const Campground = require("../Schema/campground");
 const random1000 = require("./cities");
 const { descriptors, places } = require("./seedHelpers");
 
@@ -22,7 +22,7 @@ let rann = (arr) => {
   return (no = Math.floor(Math.random() * arr.length));
 };
 function generate() {
-  for (let i = 0; i < 10; i++) {
+  for (let i = 0; i < 15; i++) {
     const price = Math.floor(Math.random() * 1000) + 500;
     const title = `${random1000[i].city} , ${random1000[i].state}`;
     const description = descriptors[rann(descriptors)];
