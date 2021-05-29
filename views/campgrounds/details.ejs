@@ -1,7 +1,7 @@
 <% layout('campgrounds/boilerplate') %>
 
-<div class="row">
-  <div class="col-6 offset-3">
+<div class="row justify-content-center">
+  <div class="col-5">
     <div class="card">
       <img class="card-img-top" src="<%=data.image%>" alt="Card image cap" />
       <div class="card-body">
@@ -30,5 +30,42 @@
       </div>
     </div>
     <a href="/campgrounds"> All campgrounds</a>
+  </div>
+
+  <div class="col-5">
+    <form
+      action="/campgrounds/<%= data._id %>/reviews"
+      method="POST"
+      novalidate
+      class="needs-validation"
+    >
+      <h2>Leave a review</h2>
+      <div class="mb-3">
+        <label for="ranger" class="form-label">Rating(1-5):</label>
+        <input
+          type="range"
+          class="form-range"
+          min="0"
+          max="5"
+          id="ranger"
+          name="review[value]"
+          required
+        />
+
+        <div class="mb-3">
+          <label class="form-label" for="review"> Review:</label>
+          <textarea
+            class="form-control"
+            name="review[desc]"
+            id="review"
+            cols="10"
+            rows="4"
+            required
+          ></textarea>
+          <div class="valid-feedback">Looks good!!</div>
+        </div>
+      </div>
+      <button class="btn btn-success">Submit</button>
+    </form>
   </div>
 </div>

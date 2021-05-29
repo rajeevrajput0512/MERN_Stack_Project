@@ -8,6 +8,10 @@ const Campground = require("./Schema/campground");
 const catchAsync = require("./utils/catchAsync");
 const customError = require("./utils/customError");
 const Joi = require("joi");
+const Review = require("./Schema/Review");
+const { populate } = require("./Schema/Review");
+const { Camopschema, reviewSchema } = require("./Schema/Joicamp");
+const { compile } = require("joi");
 mongoose
   .connect("mongodb://localhost:27017/Yelpcamp", {
     useFindAndModify: false,
@@ -33,8 +37,17 @@ app.set("view engine", "ejs");
 app.set("views", path.join(__dirname, "./views"));
 
 const ValidcampSchema = (req, res, next) => {
-  const { Camopschema } = require("./Schema/Joicamp");
   const { error } = Camopschema.validate(req.body);
+  if (error) {
+    const CompleteMessage = error.details.map((el) => el.message).join(",");
+    throw new customError(CompleteMessage, 404);
+  } else {
+    next();
+  }
+};
+
+const ValidReview = (req, res, next) => {
+  const { error } = reviewSchema.validate(req.body);
   if (error) {
     const CompleteMessage = error.details.map((el) => el.message).join(",");
     throw new customError(CompleteMessage, 404);
@@ -111,6 +124,19 @@ app.get(
     const { id } = req.params;
     const data = await Campground.findById(id);
     res.render("campgrounds/details", { data });
+  })
+);
+
+app.post(
+  "/campgrounds/:id/reviews/",
+  ValidReview,
+  catchAsync(async (req, res) => {
+    const target = await Campground.findById(req.params.id);
+    const rev = new Review(req.body.review);
+    target.reviews.push(rev);
+    await rev.save();
+    await target.save();
+    res.send(target);
   })
 );
 
