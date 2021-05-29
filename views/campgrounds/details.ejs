@@ -45,7 +45,7 @@
         <input
           type="range"
           class="form-range"
-          min="0"
+          min="1"
           max="5"
           id="ranger"
           name="review[value]"
@@ -62,10 +62,30 @@
             rows="4"
             required
           ></textarea>
+          <div class="invalid-feedback">Cannot be empty!!</div>
           <div class="valid-feedback">Looks good!!</div>
         </div>
       </div>
       <button class="btn btn-success">Submit</button>
     </form>
+
+    <div class="mb-3 prop">
+      <% data.reviews.forEach(element => { %>
+      <div class="card m-2">
+        <div class="card-body">
+          <h5 class="card-title">Rating :<%= element.value %></h5>
+          <div class="card-text"><%= element.desc %></div>
+          <div style="margin-top: 10px">
+            <form
+              action="/campgrounds/<%= data._id %>/reviews/<%= element._id %>?_method=DELETE"
+              method="POST"
+            >
+              <button class="btn btn-sm btn-danger">Delete</button>
+            </form>
+          </div>
+        </div>
+      </div>
+      <% }) %>
+    </div>
   </div>
 </div>

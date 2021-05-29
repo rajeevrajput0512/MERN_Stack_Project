@@ -9,9 +9,7 @@ const catchAsync = require("./utils/catchAsync");
 const customError = require("./utils/customError");
 const Joi = require("joi");
 const Review = require("./Schema/Review");
-const { populate } = require("./Schema/Review");
 const { Camopschema, reviewSchema } = require("./Schema/Joicamp");
-const { compile } = require("joi");
 mongoose
   .connect("mongodb://localhost:27017/Yelpcamp", {
     useFindAndModify: false,
@@ -122,7 +120,8 @@ app.get(
   "/campgrounds/:id",
   catchAsync(async (req, res, next) => {
     const { id } = req.params;
-    const data = await Campground.findById(id);
+    const data = await Campground.findById(id).populate("reviews");
+    // console.log(data);
     res.render("campgrounds/details", { data });
   })
 );
@@ -133,10 +132,20 @@ app.post(
   catchAsync(async (req, res) => {
     const target = await Campground.findById(req.params.id);
     const rev = new Review(req.body.review);
-    target.reviews.push(rev);
+    target.reviews.unshift(rev);
     await rev.save();
     await target.save();
-    res.send(target);
+    res.redirect(`/campgrounds/${target._id}`);
+  })
+);
+
+app.delete(
+  "/campgrounds/:id/reviews/:reviewID",
+  catchAsync(async (req, res) => {
+    const { id, reviewID } = req.params;
+    await Campground.findByIdAndUpdate(id, { $pull: { reviews: reviewID } });
+    await Review.findByIdAndDelete(reviewID);
+    res.redirect(`/campgrounds/${id}`);
   })
 );
 
@@ -148,7 +157,7 @@ app.use((err, req, res, next) => {
   if (!err.message) {
     err.message = " Something is wrong  I cant find out";
   }
-  res.status(status).render("error", { ...err });
+  res.status(status).render("error", { err });
 });
 
 // Listener
