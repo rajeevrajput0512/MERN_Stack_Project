@@ -8,7 +8,7 @@ const Campground = require("./Schema/campground");
 const catchAsync = require("./utils/catchAsync");
 const customError = require("./utils/customError");
 const Joi = require("joi");
-const Review = require("./Schema/Review");
+const Review = require("./Schema/review");
 const { Camopschema, reviewSchema } = require("./Schema/Joicamp");
 const dbURL = mongoose
   .connect(
