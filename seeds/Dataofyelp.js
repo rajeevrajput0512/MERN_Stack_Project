@@ -4,11 +4,14 @@ const random1000 = require("./cities");
 const { descriptors, places } = require("./seedHelpers");
 
 mongoose
-  .connect("mongodb://localhost:27017/Yelpcamp", {
-    useFindAndModify: false,
-    useUnifiedTopology: true,
-    useNewUrlParser: true,
-  })
+  .connect(
+    "mongodb+srv://Admin-Rajeev:Test123@cluster0.nzb1d.mongodb.net/Yelpcamp",
+    {
+      useFindAndModify: false,
+      useUnifiedTopology: true,
+      useNewUrlParser: true,
+    }
+  )
   .then(() => {
     console.log(" I am connected to the data base");
   })
