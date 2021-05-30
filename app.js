@@ -55,6 +55,14 @@ const ValidReview = (req, res, next) => {
 };
 
 app.get(
+  "/",
+  catchAsync(async (req, res, next) => {
+    const data = await Campground.find({});
+    res.render("campgrounds/home", { data });
+  })
+);
+
+app.get(
   "/campgrounds",
   catchAsync(async (req, res, next) => {
     const data = await Campground.find({});
