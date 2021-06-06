@@ -10,6 +10,9 @@ const customError = require("./utils/customError");
 const Joi = require("joi");
 const Review = require("./Schema/review");
 const { Camopschema, reviewSchema } = require("./Schema/Joicamp");
+const Camper = require("./routes/Camps");
+const Reviewers = require("./routes/Routers");
+const Session = require("express-session");
 const dbURL = mongoose
   .connect(
     "mongodb+srv://Admin-Rajeev:Test123@cluster0.nzb1d.mongodb.net/Yelpcamp",
@@ -57,106 +60,25 @@ const ValidReview = (req, res, next) => {
   }
 };
 
+app.use(
+  Session({
+    secret: "Nottoreviel123",
+    resave: false,
+    saveUninitialized: true,
+    cookie: {
+      httpOnly: true,
+      expires: Date.now() + 1000 * 60 * 60 * 24 * 7,
+      maxAge: 1000 * 60 * 60 * 24 * 7,
+    },
+  })
+);
+app.use("/campgrounds", Camper);
+app.use("/campgrounds/:id/reviews/", Reviewers);
 app.get(
   "/",
   catchAsync(async (req, res, next) => {
     const data = await Campground.find({});
     res.render("campgrounds/home", { data });
-  })
-);
-
-app.get(
-  "/campgrounds",
-  catchAsync(async (req, res, next) => {
-    const data = await Campground.find({});
-    res.render("campgrounds/home", { data });
-  })
-);
-
-app.get(
-  "/campgrounds/new",
-  catchAsync(async (req, res) => {
-    res.render("campgrounds/formtoadd");
-  })
-);
-
-app.post(
-  "/campgrounds",
-  ValidcampSchema,
-  catchAsync(async (req, res, next) => {
-    const { title, price, description, location, image } = req.body;
-    const nnn = new Campground({
-      title: title,
-      price: price,
-      description: description,
-      location: location,
-      image: image,
-    });
-    await nnn.save();
-    res.redirect(`/campgrounds/${nnn._id}`);
-  })
-);
-
-app.delete(
-  "/campgrounds/:id",
-  catchAsync(async (req, res) => {
-    const { id } = req.params;
-    await Campground.findByIdAndDelete(id);
-    res.redirect("/campgrounds");
-  })
-);
-
-app.get(
-  "/campgrounds/:id/edit",
-  catchAsync(async (req, res) => {
-    const { id } = req.params;
-    const data = await Campground.findById(id);
-    res.render("campgrounds/update", { data });
-  })
-);
-
-app.put(
-  "/campgrounds/:id",
-  ValidcampSchema,
-  catchAsync(async (req, res) => {
-    const { id } = req.params;
-    const nnn = await Campground.findByIdAndUpdate(id, req.body, {
-      new: true,
-      runValidators: true,
-    });
-    res.redirect(`/campgrounds/${nnn._id}`);
-  })
-);
-app.get(
-  "/campgrounds/:id",
-  catchAsync(async (req, res, next) => {
-    const { id } = req.params;
-    const data = await Campground.findById(id).populate("reviews");
-    // console.log(data);
-    res.render("campgrounds/details", { data });
-  })
-);
-
-app.post(
-  "/campgrounds/:id/reviews/",
-  ValidReview,
-  catchAsync(async (req, res) => {
-    const target = await Campground.findById(req.params.id);
-    const rev = new Review(req.body.review);
-    target.reviews.unshift(rev);
-    await rev.save();
-    await target.save();
-    res.redirect(`/campgrounds/${target._id}`);
-  })
-);
-
-app.delete(
-  "/campgrounds/:id/reviews/:reviewID",
-  catchAsync(async (req, res) => {
-    const { id, reviewID } = req.params;
-    await Campground.findByIdAndUpdate(id, { $pull: { reviews: reviewID } });
-    await Review.findByIdAndDelete(reviewID);
-    res.redirect(`/campgrounds/${id}`);
   })
 );
 
