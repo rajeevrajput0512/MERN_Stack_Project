@@ -15,12 +15,26 @@
 }
 
 .ani {
-  animation: slide-in 500ms;
+  animation: slide-in-left 500ms;
 }
 
-@keyframes slide-in {
+@keyframes slide-in-left {
   0% {
     transform: translateX(-100%);
+  }
+
+  100% {
+    transform: translateX(0%);
+  }
+}
+
+.pii {
+  animation: slide-in-right 500ms;
+}
+
+@keyframes slide-in-right {
+  0% {
+    transform: translateX(100%);
   }
 
   100% {
