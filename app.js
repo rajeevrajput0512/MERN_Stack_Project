@@ -13,15 +13,14 @@ const { Camopschema, reviewSchema } = require("./Schema/Joicamp");
 const Camper = require("./routes/Camps");
 const Reviewers = require("./routes/Routers");
 const Session = require("express-session");
+const dotenv = require("dotenv");
+dotenv.config();
 const dbURL = mongoose
-  .connect(
-    "mongodb+srv://Admin-Rajeev:Test123@cluster0.nzb1d.mongodb.net/Yelpcamp",
-    {
-      useFindAndModify: false,
-      useUnifiedTopology: true,
-      useNewUrlParser: true,
-    }
-  )
+  .connect(process.env.MDB_CONNECT, {
+    useFindAndModify: false,
+    useUnifiedTopology: true,
+    useNewUrlParser: true,
+  })
   .then(() => {
     console.log(" I am connected to the data base");
   })
