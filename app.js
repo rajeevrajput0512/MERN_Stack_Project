@@ -13,6 +13,7 @@ const { Camopschema, reviewSchema } = require("./Schema/Joicamp");
 const Camper = require("./routes/Camps");
 const Reviewers = require("./routes/Routers");
 const Session = require("express-session");
+const flash = require("connect-flash");
 const dotenv = require("dotenv");
 dotenv.config();
 const dbURL = mongoose
@@ -39,38 +40,24 @@ app.use(express.urlencoded({ extended: true }));
 app.set("view engine", "ejs");
 app.set("views", path.join(__dirname, "./views"));
 
-const ValidcampSchema = (req, res, next) => {
-  const { error } = Camopschema.validate(req.body);
-  if (error) {
-    const CompleteMessage = error.details.map((el) => el.message).join(",");
-    throw new customError(CompleteMessage, 404);
-  } else {
-    next();
-  }
+const sessionObj = {
+  secret: "Nottoreviel123",
+  resave: false,
+  saveUninitialized: true,
+  cookie: {
+    httpOnly: true,
+    expires: Date.now() + 1000 * 60 * 60 * 24 * 7,
+    maxAge: 1000 * 60 * 60 * 24 * 7,
+    secure: true,
+  },
 };
 
-const ValidReview = (req, res, next) => {
-  const { error } = reviewSchema.validate(req.body);
-  if (error) {
-    const CompleteMessage = error.details.map((el) => el.message).join(",");
-    throw new customError(CompleteMessage, 404);
-  } else {
-    next();
-  }
-};
-
-app.use(
-  Session({
-    secret: "Nottoreviel123",
-    resave: false,
-    saveUninitialized: true,
-    cookie: {
-      httpOnly: true,
-      expires: Date.now() + 1000 * 60 * 60 * 24 * 7,
-      maxAge: 1000 * 60 * 60 * 24 * 7,
-    },
-  })
-);
+app.use(Session(sessionObj));
+app.use(flash());
+app.use((req, res, next) => {
+  res.locals.success = req.flash("success");
+  next();
+});
 app.use("/campgrounds", Camper);
 app.use("/campgrounds/:id/reviews/", Reviewers);
 app.get(

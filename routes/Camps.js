@@ -45,14 +45,7 @@ Routes.post(
   "/",
   ValidcampSchema,
   catchAsync(async (req, res, next) => {
-    const { title, price, description, location, image } = req.body;
-    const nnn = new Campground({
-      title: title,
-      price: price,
-      description: description,
-      location: location,
-      image: image,
-    });
+    const nnn = new Campground(req.body);
     await nnn.save();
     res.redirect(`/campgrounds/${nnn._id}`);
   })
