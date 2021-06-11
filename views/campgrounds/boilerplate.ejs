@@ -30,30 +30,7 @@
       src="https://kit.fontawesome.com/57bd160731.js"
       crossorigin="anonymous"
     ></script>
-    <script>
-      (function () {
-        "use strict";
-
-        // Fetch all the forms we want to apply custom Bootstrap validation styles to
-        var forms = document.querySelectorAll(".needs-validation");
-
-        // Loop over them and prevent submission
-        Array.from(forms).forEach(function (form) {
-          form.addEventListener(
-            "submit",
-            function (event) {
-              if (!form.checkValidity()) {
-                event.preventDefault();
-                event.stopPropagation();
-              }
-
-              form.classList.add("was-validated");
-            },
-            false
-          );
-        });
-      })();
-    </script>
+    <script src="/javascript/Validationform.js"></script>
   </body>
 </html>
 <!-- https://source.unsplash.com/collection/9046579 -->
