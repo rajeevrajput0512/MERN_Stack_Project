@@ -16,6 +16,7 @@
 
 .ani {
   animation: slide-in-left 500ms;
+  margin-bottom: 30px;
 }
 
 @keyframes slide-in-left {
@@ -29,7 +30,11 @@
 }
 
 .pii {
+  box-shadow: 5px 3px 5px rgba(0, 0, 0, 0.1);
+  border: 2px solid rgba(61, 59, 59, 0.082);
+  padding-top: 10px;
   animation: slide-in-right 500ms;
+  border-radius: 10%;
 }
 
 @keyframes slide-in-right {
